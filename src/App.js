@@ -1,25 +1,48 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import MyInput from './components/UI/input/MyInput';
+import PostList from './components/PostList';
+import './styles/App.css';
+import MyButton from './components/UI/button/MyButton';
+const App = () => {
+  const [posts, setPosts] = useState([
+    { id: 1, title: 'JavaScript', body: 'Discription' },
+    { id: 2, title: 'Pyton', body: 'Discription' },
+    { id: 3, title: 'TypeScript', body: 'Discription' },
+  ]);
 
-function App() {
+  const [title, setTitle] = useState('');
+  const [body, setBody] = useState('');
+
+  const addNewPost = (e) => {
+    e.preventDefault();
+    const newPost = {
+      id: Date.now(),
+      title,
+      body,
+    };
+    setPosts([...posts, newPost]);
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <form>
+        <MyInput
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          type="text"
+          placeholder="Post name"
+        />
+        <MyInput
+          value={body}
+          onChange={(e) => setBody(e.target.value)}
+          type="text"
+          placeholder="Post discription"
+        />
+        <MyButton onClick={addNewPost}>Create post</MyButton>
+      </form>
+      <PostList posts={posts} title="Post list 1" />
     </div>
   );
-}
+};
 
 export default App;
