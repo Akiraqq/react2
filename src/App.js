@@ -25,7 +25,7 @@ const App = () => {
 
   return (
     <div className="App">
-      <form>
+      <form onSubmit={addNewPost}>
         <MyInput
           value={title}
           onChange={(e) => setTitle(e.target.value)}
@@ -38,7 +38,7 @@ const App = () => {
           type="text"
           placeholder="Post discription"
         />
-        <MyButton onClick={addNewPost}>Create post</MyButton>
+        <MyButton type="submit">Create post</MyButton>
       </form>
       <PostList posts={posts} title="Post list 1" />
     </div>
