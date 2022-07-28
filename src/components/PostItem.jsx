@@ -1,5 +1,5 @@
-import React from 'react';
-
+import React from 'react'
+import cl from './UI/button/MyButton.module.css'
 const PostItem = (props) => {
   return (
     <div className="post">
@@ -10,10 +10,12 @@ const PostItem = (props) => {
         <div>{props.post.body}</div>
       </div>
       <div className="post__btns">
-        <button onClick={()=> props.remove(props.post)} >Delete</button>
+        <button className={cl.myBtn} onClick={() => props.remove(props.post)}>
+          Delete
+        </button>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default PostItem;
+export default PostItem
