@@ -6,12 +6,18 @@ import PostFilter from './PostFilter'
 import MyModal from './components/UI/myModal/MyModal'
 import MyButton from './components/UI/button/MyButton'
 import { usePosts } from './hooks/usePosts'
-import axios from 'axios'
+import PostService from './API/PostService'
+import Loader from './components/UI/loader/Loader'
+import { useFetching } from './hooks/useFetching'
 const App = () => {
   const [posts, setPosts] = useState([])
   const [filter, setFilter] = useState({ sort: '', query: '' })
   const [modal, setModal] = useState(false)
   const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query)
+  const [fetchPosts, isPostLoading, postError] = useFetching(async () => {
+    const posts = await PostService.getAll()
+    setPosts(posts)
+  })
 
   useEffect(() => {
     fetchPosts()
@@ -22,13 +28,6 @@ const App = () => {
     setModal(false)
   }
 
-  const fetchPosts = async () => {
-    const response = await axios.get(
-      'https://jsonplaceholder.typicode.com/posts'
-    )
-    setPosts(response.data)
-  }
-
   const removePost = (post) => {
     setPosts(posts.filter((p) => p.id !== post.id))
   }
@@ -36,7 +35,7 @@ const App = () => {
   return (
     <div className="App">
       <MyButton style={{ marginTop: 30 }} onClick={() => setModal(true)}>
-        Create user
+        Create post
       </MyButton>
 
       <MyModal visible={modal} setVisible={setModal}>
@@ -45,12 +44,16 @@ const App = () => {
 
       <hr style={{ margin: '15px 0' }} />
       <PostFilter filter={filter} setFilter={setFilter} />
-
-      <PostList
-        remove={removePost}
-        posts={sortedAndSearchedPosts}
-        title="Post list 1"
-      />
+      {postError && <h2>Error ${postError}</h2>}
+      {isPostLoading ? (
+        <Loader />
+      ) : (
+        <PostList
+          remove={removePost}
+          posts={sortedAndSearchedPosts}
+          title="Post list"
+        />
+      )}
     </div>
   )
 }
